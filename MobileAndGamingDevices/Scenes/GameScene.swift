@@ -6,36 +6,66 @@
 //  Copyright © 2020 COWARD, MALACHI (Student). All rights reserved.
 //
 
+import CoreMotion
 import SpriteKit
-import GameplayKit
 
 class GameScene: SKScene {
     
-    var playerCar = SKSpriteNode()
+    var player: SKSpriteNode!
+    // Hack stuff for using Sim
+    var lastTouchPosition: CGPoint?
+    var motionManager: CMMotionManager?
     
     override func didMove(to view: SKView) {
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
-        setUp()
-        createRoadStrips()
+        createPlayer()
+        Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
+        
+        physicsWorld.gravity = .zero
+        
+        motionManager = CMMotionManager()
+        motionManager?.startAccelerometerUpdates()
     }
     
     override func update(_ currentTime: TimeInterval) {
         showRoadStrips()
+        removeItems()
+        
+        // Hack Stuff for Movement
+        #if targetEnvironment(simulator)
+        if let lastTouchPosition = lastTouchPosition {
+            let diff = CGPoint(x: lastTouchPosition.x - player.position.x, y: lastTouchPosition.y - player.position.y)
+            physicsWorld.gravity = CGVector(dx: diff.x / 200, dy: diff.y / 200)
+        }
+        #else
+        if let accelerometerData = motionManager?.accelerometerData {
+            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.x * 50, dy: accelerometerData.acceleration.y * -50)
+        }
+        #endif
     }
     
-    func setUp() {
-        playerCar = self.childNode(withName: "playerCar") as! SKSpriteNode
+    func createPlayer() {
+        player = SKSpriteNode(imageNamed: "playerCar")
+        player.position = CGPoint(x: -70, y: -300)
+        player.zPosition = 50
+        
+        // Do Player Physics stuff here
+        player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width / 2)
+        player.physicsBody?.allowsRotation = false
+        player.physicsBody?.linearDamping = 0.5
+        
+        addChild(player)
     }
     
-    func createRoadStrips() {
+    @objc func createRoadStrips() {
         let leftRoadStrip = SKShapeNode(rectOf : CGSize(width: 10, height: 40))
         leftRoadStrip.strokeColor = SKColor.white
         leftRoadStrip.fillColor = SKColor.white
         leftRoadStrip.alpha = 0.4
-        leftRoadStrip.name = "roadStrip"
+        leftRoadStrip.name = "leftRoadStrip"
         leftRoadStrip.zPosition = 10
-        leftRoadStrip.position.x = -187.5
+        leftRoadStrip.position.x = -(frame.size.width/4) + 25
         leftRoadStrip.position.y = 600
         addChild(leftRoadStrip)
         
@@ -43,9 +73,9 @@ class GameScene: SKScene {
         middleRoadStrip.strokeColor = SKColor.white
         middleRoadStrip.fillColor = SKColor.white
         middleRoadStrip.alpha = 0.4
-        middleRoadStrip.name = "roadStrip"
+        middleRoadStrip.name = "middleRoadStrip"
         middleRoadStrip.zPosition = 10
-        middleRoadStrip.position.x = 187.5
+        middleRoadStrip.position.x = self.frame.midX
         middleRoadStrip.position.y = 600
         addChild(middleRoadStrip)
         
@@ -53,15 +83,54 @@ class GameScene: SKScene {
         rightRoadStrip.strokeColor = SKColor.white
         rightRoadStrip.fillColor = SKColor.white
         rightRoadStrip.alpha = 0.4
-        rightRoadStrip.name = "roadStrip"
+        rightRoadStrip.name = "rightRoadStrip"
         rightRoadStrip.zPosition = 10
-        rightRoadStrip.position.x = 0
+        rightRoadStrip.position.x = (frame.size.width/4) - 25
         rightRoadStrip.position.y = 600
         addChild(rightRoadStrip)
     }
     
     func showRoadStrips() {
         
+        enumerateChildNodes(withName: "leftRoadStrip", using: { (roadStrip, stop) in
+            let strip = roadStrip as! SKShapeNode
+            strip.position.y -= 30
+        })
+        enumerateChildNodes(withName: "middleRoadStrip", using: { (roadStrip, stop) in
+            let strip = roadStrip as! SKShapeNode
+            strip.position.y -= 30
+        })
+        enumerateChildNodes(withName: "rightRoadStrip", using: { (roadStrip, stop) in
+            let strip = roadStrip as! SKShapeNode
+            strip.position.y -= 30
+        })
+    }
+    
+    func removeItems() {
+        for child in children{
+            if child.position.y < -self.size.height - 100{
+                child.removeFromParent()
+            }
+        }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // Hack Stuff
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        lastTouchPosition = location
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // Hack Stuff
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        lastTouchPosition = location
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // Hack Stuff
+        lastTouchPosition = nil
     }
     
 }
