@@ -9,7 +9,7 @@
 import CoreMotion
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var player: SKSpriteNode!
     
@@ -28,6 +28,7 @@ class GameScene: SKScene {
         createGame()
         
         physicsWorld.gravity = .zero
+        physicsWorld.contactDelegate = self
         
         motionManager = CMMotionManager()
         motionManager?.startAccelerometerUpdates()
@@ -188,6 +189,14 @@ class GameScene: SKScene {
             trafficItem.position.x = -(frame.size.width/4) - 60
         }
         trafficItem.position.y = self.frame.maxY + 100
+    
+        trafficItem.physicsBody = SKPhysicsBody(rectangleOf: trafficItem.size)
+        trafficItem.physicsBody?.isDynamic = false
+
+        trafficItem.physicsBody?.categoryBitMask = CollisionTypes.enemy.rawValue
+        trafficItem.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        trafficItem.physicsBody?.collisionBitMask = 0
+        
         addChild(trafficItem)
     }
     
@@ -224,6 +233,14 @@ class GameScene: SKScene {
             trafficItem.position.x = (frame.size.width/4) + 60
         }
         trafficItem.position.y = self.frame.maxY + 100
+        
+        trafficItem.physicsBody = SKPhysicsBody(rectangleOf: trafficItem.size)
+        trafficItem.physicsBody?.isDynamic = false
+
+        trafficItem.physicsBody?.categoryBitMask = CollisionTypes.enemy.rawValue
+        trafficItem.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        trafficItem.physicsBody?.collisionBitMask = 0
+        
         addChild(trafficItem)
     }
     
