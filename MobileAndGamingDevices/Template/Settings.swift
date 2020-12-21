@@ -8,8 +8,8 @@
 
 import SpriteKit
 
-enum PhysicsCategories {
-    static let none: UInt32 = 0
-    static let player: UInt32 = 0x1           // 01
-    static let enemy: UInt32 = 0x1 << 1    // 10
+enum CollisionTypes: UInt32 {
+    case player = 1
+    case wall = 2
+    case enemy = 4
 }

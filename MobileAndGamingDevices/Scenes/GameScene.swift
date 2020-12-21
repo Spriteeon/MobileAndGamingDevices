@@ -9,12 +9,6 @@
 import CoreMotion
 import SpriteKit
 
-enum CollisionTypes: UInt32 {
-    case player = 1
-    case wall = 2
-    case enemy = 4
-}
-
 class GameScene: SKScene {
     
     var player: SKSpriteNode!
