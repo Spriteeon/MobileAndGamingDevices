@@ -9,9 +9,21 @@
 import CoreMotion
 import SpriteKit
 
+enum CollisionTypes: UInt32 {
+    case player = 1
+    case wall = 2
+    case enemy = 4
+}
+
 class GameScene: SKScene {
     
     var player: SKSpriteNode!
+    
+    var leftWall = SKSpriteNode()
+    var rightWall = SKSpriteNode()
+    var topWall = SKSpriteNode()
+    var bottomWall = SKSpriteNode()
+    
     // Hack stuff for using Sim
     var lastTouchPosition: CGPoint?
     var motionManager: CMMotionManager?
@@ -19,8 +31,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
-        createPlayer()
-        Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
+        createGame()
         
         physicsWorld.gravity = .zero
         
@@ -32,7 +43,16 @@ class GameScene: SKScene {
         showRoadStrips()
         removeItems()
         
-        // Hack Stuff for Movement
+        move()
+    }
+    
+    func createGame() {
+        createPlayer()
+        createWalls()
+        Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
+    }
+    
+    func move() {
         #if targetEnvironment(simulator)
         if let lastTouchPosition = lastTouchPosition {
             let diff = CGPoint(x: lastTouchPosition.x - player.position.x, y: lastTouchPosition.y - player.position.y)
@@ -51,11 +71,35 @@ class GameScene: SKScene {
         player.zPosition = 50
         
         // Do Player Physics stuff here
-        player.physicsBody = SKPhysicsBody(circleOfRadius: player.size.width / 2)
+        player.physicsBody = SKPhysicsBody(rectangleOf: player.size)
+        player.physicsBody?.categoryBitMask = CollisionTypes.player.rawValue
         player.physicsBody?.allowsRotation = false
         player.physicsBody?.linearDamping = 0.5
         
         addChild(player)
+    }
+    
+    func createWalls() {
+        leftWall = self.childNode(withName: "leftWall") as! SKSpriteNode
+        leftWall.physicsBody = SKPhysicsBody(rectangleOf: leftWall.size)
+        leftWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
+        leftWall.physicsBody?.isDynamic = false
+        
+        rightWall = self.childNode(withName: "rightWall") as! SKSpriteNode
+        rightWall.physicsBody = SKPhysicsBody(rectangleOf: rightWall.size)
+        rightWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
+        rightWall.physicsBody?.isDynamic = false
+        
+        topWall = self.childNode(withName: "topWall") as! SKSpriteNode
+        topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
+        topWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
+        topWall.physicsBody?.isDynamic = false
+        
+        bottomWall = self.childNode(withName: "bottomWall") as! SKSpriteNode
+        bottomWall.physicsBody = SKPhysicsBody(rectangleOf: bottomWall.size)
+        bottomWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
+        bottomWall.physicsBody?.isDynamic = false
+        
     }
     
     @objc func createRoadStrips() {
