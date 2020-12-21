@@ -35,6 +35,7 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         showRoadStrips()
+        showEnemyCars()
         removeItems()
         
         move()
@@ -44,6 +45,8 @@ class GameScene: SKScene {
         createPlayer()
         createWalls()
         Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 2)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 2)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
     }
     
     func move() {
@@ -142,6 +145,86 @@ class GameScene: SKScene {
             let strip = roadStrip as! SKShapeNode
             strip.position.y -= 30
         })
+    }
+    
+    func showEnemyCars() {
+        
+        enumerateChildNodes(withName: "enemyCar", using: { (car, stop) in
+            let currentCar = car as! SKSpriteNode
+            currentCar.position.y -= 10
+        })
+    }
+    
+    @objc func leftTraffic() {
+        let trafficItem : SKSpriteNode!
+        let randomCol = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
+        switch Int(randomCol) {
+        case 1...4:
+            trafficItem = SKSpriteNode(imageNamed: "orangeCar")
+            trafficItem.name = "enemyCar"
+            break
+        case 5...8:
+            trafficItem = SKSpriteNode(imageNamed: "greenCar")
+            trafficItem.name = "enemyCar"
+            break
+        default:
+            // Should never happen
+            trafficItem = SKSpriteNode(imageNamed: "blueCar")
+            trafficItem.name = "enemyCar"
+        }
+        trafficItem.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        trafficItem.zPosition = 50
+        
+        let randomLane = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
+        switch randomLane {
+        case 1...4: // Far Left Lane
+            trafficItem.position.x = -(frame.size.width/4) - 60
+            break
+        case 5...8: // Middle Left Lane
+            trafficItem.position.x = -(frame.size.width/4) + 110
+            break
+        default:
+            // Should never happen
+            trafficItem.position.x = -(frame.size.width/4) - 60
+        }
+        trafficItem.position.y = self.frame.maxY + 100
+        addChild(trafficItem)
+    }
+    
+    @objc func rightTraffic() {
+        let trafficItem : SKSpriteNode!
+        let randomCol = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
+        switch Int(randomCol) {
+        case 1...4:
+            trafficItem = SKSpriteNode(imageNamed: "orangeCar")
+            trafficItem.name = "enemyCar"
+            break
+        case 5...8:
+            trafficItem = SKSpriteNode(imageNamed: "greenCar")
+            trafficItem.name = "enemyCar"
+            break
+        default:
+            // Should never happen
+            trafficItem = SKSpriteNode(imageNamed: "blueCar")
+            trafficItem.name = "enemyCar"
+        }
+        trafficItem.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        trafficItem.zPosition = 50
+        
+        let randomLane = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
+        switch randomLane {
+        case 1...4: // Middle Right Lane
+            trafficItem.position.x = (frame.size.width/4) - 110
+            break
+        case 5...8: // Far Right Lane
+            trafficItem.position.x = (frame.size.width/4) + 60
+            break
+        default:
+            // Should never happen
+            trafficItem.position.x = (frame.size.width/4) + 60
+        }
+        trafficItem.position.y = self.frame.maxY + 100
+        addChild(trafficItem)
     }
     
     func removeItems() {
