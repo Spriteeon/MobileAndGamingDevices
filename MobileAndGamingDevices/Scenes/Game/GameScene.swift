@@ -13,14 +13,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var player: SKSpriteNode!
     
-    var leftWall = SKSpriteNode()
-    var rightWall = SKSpriteNode()
-    var topWall = SKSpriteNode()
-    var bottomWall = SKSpriteNode()
+    //var leftWall = SKSpriteNode()
+    //var rightWall = SKSpriteNode()
+    //var topWall = SKSpriteNode()
+    //var bottomWall = SKSpriteNode()
     
     // Hack stuff for using Sim
     var lastTouchPosition: CGPoint?
     var motionManager: CMMotionManager?
+    
+    let scoreLabel = SKLabelNode(text: "0")
+    var score = 0
+    
+    let livesLabel = SKLabelNode(text: "5")
+    var lives = 5
     
     override func didMove(to view: SKView) {
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -40,14 +46,50 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         removeItems()
         
         move()
+        
+        score += 1
+        updateScoreLabel()
+        
+        if lives <= 0 {
+            gameOver()
+        }
+    }
+    
+    func gameOver() {
+        
     }
     
     func createGame() {
         createPlayer()
         createWalls()
+        addUI()
         Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 2)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 2)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
+    }
+    
+    func addUI() {
+        scoreLabel.fontName = "AvenirNext-Bold"
+        scoreLabel.fontSize = 60.0
+        scoreLabel.fontColor = UIColor.red
+        scoreLabel.position = CGPoint(x: frame.midX, y: frame.maxY - 100)
+        scoreLabel.zPosition = 100
+        addChild(scoreLabel)
+        
+        livesLabel.fontName = "AvenirNext-Bold"
+        livesLabel.fontSize = 60.0
+        livesLabel.fontColor = UIColor.red
+        livesLabel.position = CGPoint(x: frame.maxX - 25, y: frame.maxY - 100)
+        livesLabel.zPosition = 100
+        addChild(livesLabel)
+    }
+    
+    func updateScoreLabel() {
+        scoreLabel.text = "\(score)"
+    }
+    
+    func updateLivesLabel() {
+        scoreLabel.text = "\(score)"
     }
     
     func move() {
@@ -81,36 +123,68 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createWalls() {
-        leftWall = self.childNode(withName: "leftWall") as! SKSpriteNode
-        leftWall.physicsBody = SKPhysicsBody(rectangleOf: leftWall.size)
+        let leftWall = SKShapeNode(rectOf : CGSize(width: 50, height: 1030))
+        leftWall.strokeColor = SKColor.white
+        leftWall.fillColor = SKColor.white
+        leftWall.alpha = 1
+        leftWall.name = "leftWall"
+        leftWall.zPosition = 10
+        leftWall.position.x = -360
+        leftWall.position.y = -3.8
+        leftWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 1030))
         leftWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         leftWall.physicsBody?.isDynamic = false
         leftWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        addChild(leftWall)
         
-        rightWall = self.childNode(withName: "rightWall") as! SKSpriteNode
-        rightWall.physicsBody = SKPhysicsBody(rectangleOf: rightWall.size)
+        let rightWall = SKShapeNode(rectOf : CGSize(width: 50, height: 1030))
+        rightWall.strokeColor = SKColor.white
+        rightWall.fillColor = SKColor.white
+        rightWall.alpha = 1
+        rightWall.name = "rightWall"
+        rightWall.zPosition = 10
+        rightWall.position.x = 360
+        rightWall.position.y = -3.8
+        rightWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 1030))
         rightWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         rightWall.physicsBody?.isDynamic = false
         rightWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        addChild(rightWall)
         
-        topWall = self.childNode(withName: "topWall") as! SKSpriteNode
-        topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
+        let topWall = SKShapeNode(rectOf : CGSize(width: 770, height: 50))
+        topWall.strokeColor = SKColor.white
+        topWall.fillColor = SKColor.white
+        topWall.alpha = 1
+        topWall.name = "topWall"
+        topWall.zPosition = 10
+        topWall.position.x = 0
+        topWall.position.y = 537
+        topWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 770, height: 50))
         topWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         topWall.physicsBody?.isDynamic = false
         topWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        addChild(topWall)
         
-        bottomWall = self.childNode(withName: "bottomWall") as! SKSpriteNode
-        bottomWall.physicsBody = SKPhysicsBody(rectangleOf: bottomWall.size)
+        let bottomWall = SKShapeNode(rectOf : CGSize(width: 770, height: 50))
+        bottomWall.strokeColor = SKColor.white
+        bottomWall.fillColor = SKColor.white
+        bottomWall.alpha = 1
+        bottomWall.name = "bottomWall"
+        bottomWall.zPosition = 10
+        bottomWall.position.x = 0
+        bottomWall.position.y = -537
+        bottomWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 770, height: 50))
         bottomWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         bottomWall.physicsBody?.isDynamic = false
         bottomWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
+        addChild(bottomWall)
     }
     
     @objc func createRoadStrips() {
         let leftRoadStrip = SKShapeNode(rectOf : CGSize(width: 10, height: 40))
         leftRoadStrip.strokeColor = SKColor.white
         leftRoadStrip.fillColor = SKColor.white
-        leftRoadStrip.alpha = 0.4
+        leftRoadStrip.alpha = 0.8
         leftRoadStrip.name = "leftRoadStrip"
         leftRoadStrip.zPosition = 10
         leftRoadStrip.position.x = -(frame.size.width/4) + 25
@@ -120,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let middleRoadStrip = SKShapeNode(rectOf : CGSize(width: 10, height: 40))
         middleRoadStrip.strokeColor = SKColor.white
         middleRoadStrip.fillColor = SKColor.white
-        middleRoadStrip.alpha = 0.4
+        middleRoadStrip.alpha = 0.8
         middleRoadStrip.name = "middleRoadStrip"
         middleRoadStrip.zPosition = 10
         middleRoadStrip.position.x = self.frame.midX
@@ -130,7 +204,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let rightRoadStrip = SKShapeNode(rectOf : CGSize(width: 10, height: 40))
         rightRoadStrip.strokeColor = SKColor.white
         rightRoadStrip.fillColor = SKColor.white
-        rightRoadStrip.alpha = 0.4
+        rightRoadStrip.alpha = 0.8
         rightRoadStrip.name = "rightRoadStrip"
         rightRoadStrip.zPosition = 10
         rightRoadStrip.position.x = (frame.size.width/4) - 25

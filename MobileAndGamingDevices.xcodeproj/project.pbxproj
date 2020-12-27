@@ -14,6 +14,9 @@
 		AB421934258ED84E00FA3993 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB421932258ED84E00FA3993 /* Main.storyboard */; };
 		AB421936258ED84F00FA3993 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB421935258ED84F00FA3993 /* Assets.xcassets */; };
 		AB421939258ED84F00FA3993 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB421937258ED84F00FA3993 /* LaunchScreen.storyboard */; };
+		AB6092E12599130100D69CDD /* MenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = AB6092E02599130100D69CDD /* MenuScene.sks */; };
+		AB6092E32599188600D69CDD /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6092E22599188600D69CDD /* MenuScene.swift */; };
+		AB6092E725993D2700D69CDD /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = AB6092E625993D2700D69CDD /* Explosion.sks */; };
 		AB90FE69258F9A900087A7F3 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90FE68258F9A900087A7F3 /* Settings.swift */; };
 		ABD1C561259109620048C0C0 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD1C560259109620048C0C0 /* Helper.swift */; };
 /* End PBXBuildFile section */
@@ -28,6 +31,9 @@
 		AB421935258ED84F00FA3993 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AB421938258ED84F00FA3993 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AB42193A258ED84F00FA3993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AB6092E02599130100D69CDD /* MenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MenuScene.sks; sourceTree = "<group>"; };
+		AB6092E22599188600D69CDD /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
+		AB6092E625993D2700D69CDD /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Explosion.sks; path = ../../../../../Downloads/Explosion.sks; sourceTree = "<group>"; };
 		AB90FE68258F9A900087A7F3 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		ABD1C560259109620048C0C0 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -74,10 +80,28 @@
 		AB421942258ED8BB00FA3993 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				AB42192E258ED84E00FA3993 /* GameScene.swift */,
-				AB42192A258ED84E00FA3993 /* GameScene.sks */,
+				AB6092E525991DEC00D69CDD /* Menu */,
+				AB6092E425991DE100D69CDD /* Game */,
 			);
 			path = Scenes;
+			sourceTree = "<group>";
+		};
+		AB6092E425991DE100D69CDD /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				AB42192A258ED84E00FA3993 /* GameScene.sks */,
+				AB42192E258ED84E00FA3993 /* GameScene.swift */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+		AB6092E525991DEC00D69CDD /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				AB6092E02599130100D69CDD /* MenuScene.sks */,
+				AB6092E22599188600D69CDD /* MenuScene.swift */,
+			);
+			path = Menu;
 			sourceTree = "<group>";
 		};
 		AB90FE65258ED9490087A7F3 /* Assets */ = {
@@ -85,6 +109,7 @@
 			children = (
 				AB421932258ED84E00FA3993 /* Main.storyboard */,
 				AB421935258ED84F00FA3993 /* Assets.xcassets */,
+				AB6092E625993D2700D69CDD /* Explosion.sks */,
 				AB421937258ED84F00FA3993 /* LaunchScreen.storyboard */,
 			);
 			path = Assets;
@@ -169,7 +194,9 @@
 				AB421934258ED84E00FA3993 /* Main.storyboard in Resources */,
 				AB42192B258ED84E00FA3993 /* GameScene.sks in Resources */,
 				AB421936258ED84F00FA3993 /* Assets.xcassets in Resources */,
+				AB6092E12599130100D69CDD /* MenuScene.sks in Resources */,
 				AB421939258ED84F00FA3993 /* LaunchScreen.storyboard in Resources */,
+				AB6092E725993D2700D69CDD /* Explosion.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +210,7 @@
 				AB42192F258ED84E00FA3993 /* GameScene.swift in Sources */,
 				AB421931258ED84E00FA3993 /* GameViewController.swift in Sources */,
 				ABD1C561259109620048C0C0 /* Helper.swift in Sources */,
+				AB6092E32599188600D69CDD /* MenuScene.swift in Sources */,
 				AB90FE69258F9A900087A7F3 /* Settings.swift in Sources */,
 				AB421929258ED84E00FA3993 /* AppDelegate.swift in Sources */,
 			);
