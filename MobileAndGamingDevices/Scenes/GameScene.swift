@@ -74,6 +74,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.physicsBody?.allowsRotation = false
         player.physicsBody?.linearDamping = 0.5
         
+        player.physicsBody?.contactTestBitMask = CollisionTypes.enemy.rawValue
+        // player.physicsBody?.collisionBitMask = 0
+        
         addChild(player)
     }
     
@@ -82,22 +85,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         leftWall.physicsBody = SKPhysicsBody(rectangleOf: leftWall.size)
         leftWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         leftWall.physicsBody?.isDynamic = false
+        leftWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
         
         rightWall = self.childNode(withName: "rightWall") as! SKSpriteNode
         rightWall.physicsBody = SKPhysicsBody(rectangleOf: rightWall.size)
         rightWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         rightWall.physicsBody?.isDynamic = false
+        rightWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
         
         topWall = self.childNode(withName: "topWall") as! SKSpriteNode
         topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
         topWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         topWall.physicsBody?.isDynamic = false
+        topWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
         
         bottomWall = self.childNode(withName: "bottomWall") as! SKSpriteNode
         bottomWall.physicsBody = SKPhysicsBody(rectangleOf: bottomWall.size)
         bottomWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         bottomWall.physicsBody?.isDynamic = false
-        
+        bottomWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
     }
     
     @objc func createRoadStrips() {
