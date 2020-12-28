@@ -23,6 +23,14 @@ class MenuScene: SKScene {
     }
     
     func addLabels() {
+        
+        let titleLabel = SKLabelNode(text: "Virus Rush")
+        titleLabel.fontName = "AvenirNext-Bold"
+        titleLabel.fontSize = 70.0
+        titleLabel.fontColor = UIColor.white
+        titleLabel.position = CGPoint(x: frame.midX, y: frame.midY + 100)
+        addChild(titleLabel)
+        
         let playLabel = SKLabelNode(text: "Tap to Play!")
         playLabel.fontName = "AvenirNext-Bold"
         playLabel.fontSize = 50.0
@@ -59,7 +67,7 @@ class MenuScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let transition = SKTransition.flipHorizontal(withDuration: 0.5)
-        let gameScene = GameScene(size: self.size)
+        let gameScene = GameScene(size: view!.bounds.size)
         self.view?.presentScene(gameScene, transition: transition)
     }
     

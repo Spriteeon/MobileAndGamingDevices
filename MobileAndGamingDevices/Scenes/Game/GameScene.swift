@@ -8,25 +8,33 @@
 
 import CoreMotion
 import SpriteKit
+import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var player: SKSpriteNode!
     
-    //var leftWall = SKSpriteNode()
-    //var rightWall = SKSpriteNode()
-    //var topWall = SKSpriteNode()
-    //var bottomWall = SKSpriteNode()
-    
     // Hack stuff for using Sim
     var lastTouchPosition: CGPoint?
     var motionManager: CMMotionManager?
     
-    let scoreLabel = SKLabelNode(text: "0")
-    var score = 0
+    let scoreLabel = SKLabelNode(text: "Score: 0")
+    var score = 0 {
+        didSet {
+            scoreLabel.text = "Score: \(score)"
+        }
+    }
     
     let livesLabel = SKLabelNode(text: "5")
-    var lives = 5
+    var lives = 5 {
+        didSet {
+            livesLabel.text = "\(lives)"
+        }
+    }
+    
+    var isGameOver = false
+    
+    var possibleCars = ["orangeCar", "greenCar", "blueCar"]
     
     override func didMove(to view: SKView) {
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -41,6 +49,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
+        
+        guard isGameOver == false else { return }
+        
         showRoadStrips()
         showEnemyCars()
         removeItems()
@@ -48,7 +59,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         move()
         
         score += 1
-        updateScoreLabel()
         
         if lives <= 0 {
             gameOver()
@@ -56,16 +66,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func gameOver() {
+        isGameOver = true
+        physicsWorld.gravity = .zero
         
+        UserDefaults.standard.set(score, forKey: "RecentScore")
+        if score > UserDefaults.standard.integer(forKey: "Highscore") {
+            UserDefaults.standard.set(score, forKey: "Highscore")
+        }
+        
+        let menuScene = MenuScene(size: view!.bounds.size)
+        view!.presentScene(menuScene)
     }
     
     func createGame() {
         createPlayer()
         createWalls()
         addUI()
-        Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
-        Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 2)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
-        Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 2)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
     }
     
     func addUI() {
@@ -84,14 +103,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(livesLabel)
     }
     
-    func updateScoreLabel() {
-        scoreLabel.text = "\(score)"
-    }
-    
-    func updateLivesLabel() {
-        scoreLabel.text = "\(score)"
-    }
-    
     func move() {
         #if targetEnvironment(simulator)
         if let lastTouchPosition = lastTouchPosition {
@@ -106,7 +117,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createPlayer() {
-        player = SKSpriteNode(imageNamed: "playerCar")
+        player = SKSpriteNode(imageNamed: "blueCar")
         player.position = CGPoint(x: -70, y: -300)
         player.zPosition = 50
         
@@ -123,29 +134,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createWalls() {
-        let leftWall = SKShapeNode(rectOf : CGSize(width: 50, height: 1030))
+        let leftWall = SKShapeNode(rectOf : CGSize(width: 100, height: 1100))
         leftWall.strokeColor = SKColor.white
         leftWall.fillColor = SKColor.white
         leftWall.alpha = 1
         leftWall.name = "leftWall"
         leftWall.zPosition = 10
-        leftWall.position.x = -360
+        leftWall.position.x = -410
         leftWall.position.y = -3.8
-        leftWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 1030))
+        leftWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 100, height: 1100))
         leftWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         leftWall.physicsBody?.isDynamic = false
         leftWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
         addChild(leftWall)
         
-        let rightWall = SKShapeNode(rectOf : CGSize(width: 50, height: 1030))
+        let rightWall = SKShapeNode(rectOf : CGSize(width: 100, height: 1100))
         rightWall.strokeColor = SKColor.white
         rightWall.fillColor = SKColor.white
         rightWall.alpha = 1
         rightWall.name = "rightWall"
         rightWall.zPosition = 10
-        rightWall.position.x = 360
+        rightWall.position.x = 410
         rightWall.position.y = -3.8
-        rightWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 50, height: 1030))
+        rightWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 100, height: 1100))
         rightWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         rightWall.physicsBody?.isDynamic = false
         rightWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
@@ -158,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         topWall.name = "topWall"
         topWall.zPosition = 10
         topWall.position.x = 0
-        topWall.position.y = 537
+        topWall.position.y = 570
         topWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 770, height: 50))
         topWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         topWall.physicsBody?.isDynamic = false
@@ -172,7 +183,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bottomWall.name = "bottomWall"
         bottomWall.zPosition = 10
         bottomWall.position.x = 0
-        bottomWall.position.y = -537
+        bottomWall.position.y = -570
         bottomWall.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 770, height: 50))
         bottomWall.physicsBody?.categoryBitMask = CollisionTypes.wall.rawValue
         bottomWall.physicsBody?.isDynamic = false
@@ -238,21 +249,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     @objc func leftTraffic() {
         let trafficItem : SKSpriteNode!
-        let randomCol = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
-        switch Int(randomCol) {
-        case 1...4:
-            trafficItem = SKSpriteNode(imageNamed: "orangeCar")
-            trafficItem.name = "enemyCar"
-            break
-        case 5...8:
-            trafficItem = SKSpriteNode(imageNamed: "greenCar")
-            trafficItem.name = "enemyCar"
-            break
-        default:
-            // Should never happen
-            trafficItem = SKSpriteNode(imageNamed: "blueCar")
-            trafficItem.name = "enemyCar"
-        }
+        possibleCars = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: possibleCars) as! [String]
+        trafficItem = SKSpriteNode(imageNamed: possibleCars[0])
+        trafficItem.name = "enemyCar"
+
         trafficItem.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         trafficItem.zPosition = 50
         
@@ -282,21 +282,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     @objc func rightTraffic() {
         let trafficItem : SKSpriteNode!
-        let randomCol = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
-        switch Int(randomCol) {
-        case 1...4:
-            trafficItem = SKSpriteNode(imageNamed: "orangeCar")
-            trafficItem.name = "enemyCar"
-            break
-        case 5...8:
-            trafficItem = SKSpriteNode(imageNamed: "greenCar")
-            trafficItem.name = "enemyCar"
-            break
-        default:
-            // Should never happen
-            trafficItem = SKSpriteNode(imageNamed: "blueCar")
-            trafficItem.name = "enemyCar"
-        }
+        possibleCars = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: possibleCars) as! [String]
+        trafficItem = SKSpriteNode(imageNamed: possibleCars[0])
+        trafficItem.name = "enemyCar"
+        
         trafficItem.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         trafficItem.zPosition = 50
         
@@ -328,6 +317,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for child in children{
             if child.position.y < -self.size.height - 100{
                 child.removeFromParent()
+            }
+        }
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        guard let nodeA = contact.bodyA.node else { return }
+        guard let nodeB = contact.bodyB.node else { return }
+        
+        if nodeA == player {
+            playerCollided(with: nodeB)
+        } else if nodeB == player {
+            playerCollided(with: nodeA)
+        }
+    }
+    
+    func playerCollided(with node: SKNode) {
+        if node.name == "enemyCar" {
+            node.removeFromParent()
+            
+            let explosion = SKEmitterNode(fileNamed: "Explosion")!
+            explosion.position = node.position
+            self.addChild(explosion)
+            
+            lives -= 1
+            if lives <= 0 {
+                gameOver()
+            }
+            
+            self.run(SKAction.wait(forDuration: 2)) {
+                explosion.removeFromParent()
             }
         }
     }
