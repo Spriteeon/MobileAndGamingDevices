@@ -57,6 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         showRoadStrips()
         showEnemyCars()
+        showScenery()
         showSyringes()
         removeItems()
         
@@ -92,6 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
+        Timer.scheduledTimer(timeInterval: TimeInterval(0.5), target: self, selector: #selector (GameScene.createScenery), userInfo: nil, repeats: true)
     }
     
     func gameOver() {
@@ -151,8 +153,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createWalls() {
         let leftWall = SKShapeNode(rectOf : CGSize(width: 100, height: 1100))
-        leftWall.strokeColor = SKColor.white
-        leftWall.fillColor = SKColor.white
+        leftWall.strokeColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
+        leftWall.fillColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
         leftWall.alpha = 1
         leftWall.name = "leftWall"
         leftWall.zPosition = 10
@@ -165,8 +167,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(leftWall)
         
         let rightWall = SKShapeNode(rectOf : CGSize(width: 100, height: 1100))
-        rightWall.strokeColor = SKColor.white
-        rightWall.fillColor = SKColor.white
+        rightWall.strokeColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
+        rightWall.fillColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
         rightWall.alpha = 1
         rightWall.name = "rightWall"
         rightWall.zPosition = 10
@@ -179,8 +181,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(rightWall)
         
         let topWall = SKShapeNode(rectOf : CGSize(width: 770, height: 50))
-        topWall.strokeColor = SKColor.white
-        topWall.fillColor = SKColor.white
+        topWall.strokeColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
+        topWall.fillColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
         topWall.alpha = 1
         topWall.name = "topWall"
         topWall.zPosition = 10
@@ -193,8 +195,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(topWall)
         
         let bottomWall = SKShapeNode(rectOf : CGSize(width: 770, height: 50))
-        bottomWall.strokeColor = SKColor.white
-        bottomWall.fillColor = SKColor.white
+        bottomWall.strokeColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
+        bottomWall.fillColor = SKColor(red: 5/255, green: 112/255, blue: 28/255, alpha: 1)
         bottomWall.alpha = 1
         bottomWall.name = "bottomWall"
         bottomWall.zPosition = 10
@@ -205,6 +207,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bottomWall.physicsBody?.isDynamic = false
         bottomWall.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
         addChild(bottomWall)
+    }
+    
+    @objc func createScenery() {
+        let treeItem = SKSpriteNode(imageNamed: "tree")
+        
+        treeItem.name = "tree"
+
+        treeItem.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        treeItem.zPosition = 50
+        
+        let randomSide = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
+        switch randomSide {
+        case 1...4: // Left Side
+            treeItem.position.x = frame.minX
+            break
+        case 5...8: // Right Side
+            treeItem.position.x = frame.maxX
+            break
+        default:
+            // Should never happen
+            treeItem.position.x = frame.minX
+        }
+        treeItem.position.y = self.frame.maxY + 100
+        
+        self.addChild(treeItem)
+        
     }
     
     @objc func createRoadStrips() {
@@ -331,6 +359,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 child.removeFromParent()
             }
         }
+    }
+    
+    func showScenery() {
+        enumerateChildNodes(withName: "tree", using: { (tree, stop) in
+            let treeItem = tree as! SKSpriteNode
+            treeItem.position.y -= 30
+        })
     }
     
     func showRoadStrips() {
