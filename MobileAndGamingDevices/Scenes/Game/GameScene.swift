@@ -103,8 +103,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             UserDefaults.standard.set(score, forKey: "Highscore")
         }
         
-        let menuScene = MenuScene(size: view!.bounds.size)
-        view!.presentScene(menuScene)
+        let loseMenuScene = LoseMenuScene(size: view!.bounds.size)
+        view!.presentScene(loseMenuScene)
     }
     
     /*func createBackground() {

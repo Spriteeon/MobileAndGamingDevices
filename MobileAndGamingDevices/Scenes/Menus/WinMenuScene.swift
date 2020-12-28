@@ -1,37 +1,29 @@
 //
-//  MenuScene.swift
+//  WinMenu.swift
 //  MobileAndGamingDevices
 //
-//  Created by COWARD, MALACHI (Student) on 27/12/2020.
+//  Created by COWARD, MALACHI (Student) on 28/12/2020.
 //  Copyright © 2020 COWARD, MALACHI (Student). All rights reserved.
 //
 
 import SpriteKit
 
-class MenuScene: SKScene {
+class WinMenuScene: SKScene {
     
     override func didMove(to view: SKView) {
-        addLogo()
         addLabels()
-    }
-    
-    func addLogo() {
-        let logo = SKSpriteNode(imageNamed: "ronaRushLogo")
-        logo.size = CGSize(width: frame.size.width/4 + 200, height: frame.size.width/4 + 200)
-        logo.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
-        addChild(logo)
     }
     
     func addLabels() {
         
-        /*let titleLabel = SKLabelNode(text: "Virus Rush")
+        let titleLabel = SKLabelNode(text: "You Made it!")
         titleLabel.fontName = "AvenirNext-Bold"
         titleLabel.fontSize = 70.0
         titleLabel.fontColor = UIColor.white
         titleLabel.position = CGPoint(x: frame.midX, y: frame.midY + 100)
-        addChild(titleLabel)*/
+        addChild(titleLabel)
         
-        let playLabel = SKLabelNode(text: "Tap to Play!")
+        let playLabel = SKLabelNode(text: "Tap to Exit")
         playLabel.fontName = "AvenirNext-Bold"
         playLabel.fontSize = 50.0
         playLabel.fontColor = UIColor.white
@@ -67,8 +59,8 @@ class MenuScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let transition = SKTransition.flipHorizontal(withDuration: 0.5)
-        let gameScene = GameScene(size: view!.bounds.size)
-        self.view?.presentScene(gameScene, transition: transition)
+        let mainMenuScene = MainMenuScene(size: view!.bounds.size)
+        self.view?.presentScene(mainMenuScene, transition: transition)
     }
-    
+
 }

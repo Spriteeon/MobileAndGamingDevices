@@ -15,7 +15,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let view = self.view as! SKView?, let scene = MenuScene(fileNamed: "MenuScene") {
+        if let view = self.view as! SKView?, let scene = MainMenuScene(fileNamed: "MainMenuScene") {
             
             scene.scaleMode = .aspectFill
             
