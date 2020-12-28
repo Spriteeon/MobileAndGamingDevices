@@ -69,17 +69,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func gameOver() {
-        isGameOver = true
-        physicsWorld.gravity = .zero
-        
-        UserDefaults.standard.set(score, forKey: "RecentScore")
-        if score > UserDefaults.standard.integer(forKey: "Highscore") {
-            UserDefaults.standard.set(score, forKey: "Highscore")
+    func move() {
+        #if targetEnvironment(simulator)
+        if let lastTouchPosition = lastTouchPosition {
+            let diff = CGPoint(x: lastTouchPosition.x - player.position.x, y: lastTouchPosition.y - player.position.y)
+            player.physicsBody?.velocity = CGVector(dx: diff.x, dy: diff.y)
         }
-        
-        let menuScene = MenuScene(size: view!.bounds.size)
-        view!.presentScene(menuScene)
+        #else
+        if let accelerometerData = motionManager?.accelerometerData {
+            player.physicsBody?.velocity = CGVector(dx: accelerometerData.acceleration.x * 50, dy: accelerometerData.acceleration.y * -50)
+        }
+        #endif
     }
     
     func createGame() {
@@ -92,6 +92,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
+    }
+    
+    func gameOver() {
+        isGameOver = true
+        physicsWorld.gravity = .zero
+        
+        UserDefaults.standard.set(score, forKey: "RecentScore")
+        if score > UserDefaults.standard.integer(forKey: "Highscore") {
+            UserDefaults.standard.set(score, forKey: "Highscore")
+        }
+        
+        let menuScene = MenuScene(size: view!.bounds.size)
+        view!.presentScene(menuScene)
     }
     
     /*func createBackground() {
@@ -116,19 +129,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesLabel.position = CGPoint(x: frame.maxX - 25, y: frame.maxY - 100)
         livesLabel.zPosition = 100
         addChild(livesLabel)
-    }
-    
-    func move() {
-        #if targetEnvironment(simulator)
-        if let lastTouchPosition = lastTouchPosition {
-            let diff = CGPoint(x: lastTouchPosition.x - player.position.x, y: lastTouchPosition.y - player.position.y)
-            player.physicsBody?.velocity = CGVector(dx: diff.x, dy: diff.y)
-        }
-        #else
-        if let accelerometerData = motionManager?.accelerometerData {
-            player.physicsBody?.velocity = CGVector(dx: accelerometerData.acceleration.x * 50, dy: accelerometerData.acceleration.y * -50)
-        }
-        #endif
     }
     
     func createPlayer() {
@@ -239,30 +239,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(rightRoadStrip)
     }
     
-    func showRoadStrips() {
-        
-        enumerateChildNodes(withName: "leftRoadStrip", using: { (roadStrip, stop) in
-            let strip = roadStrip as! SKShapeNode
-            strip.position.y -= 30
-        })
-        enumerateChildNodes(withName: "middleRoadStrip", using: { (roadStrip, stop) in
-            let strip = roadStrip as! SKShapeNode
-            strip.position.y -= 30
-        })
-        enumerateChildNodes(withName: "rightRoadStrip", using: { (roadStrip, stop) in
-            let strip = roadStrip as! SKShapeNode
-            strip.position.y -= 30
-        })
-    }
-    
-    func showEnemyCars() {
-        
-        enumerateChildNodes(withName: "enemyCar", using: { (car, stop) in
-            let currentCar = car as! SKSpriteNode
-            currentCar.position.y -= 10
-        })
-    }
-    
     @objc func leftTraffic() {
         possibleCars = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: possibleCars) as! [String]
         trafficItem = SKSpriteNode(imageNamed: possibleCars[0])
@@ -327,17 +303,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(trafficItem)
     }
     
-    func removeItems() {
-        for child in children{
-            if child.position.y < -self.size.height - 100{
-                child.removeFromParent()
-            }
-            if child.position.y > self.size.height + 150{
-                child.removeFromParent()
-            }
-        }
-    }
-    
     func fireSyringe() {
         syringeNode = SKSpriteNode(imageNamed: "syringe")
         syringeNode.name = "syringe"
@@ -355,6 +320,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         syringeNode.physicsBody?.collisionBitMask = 0
         
         self.addChild(syringeNode)
+    }
+    
+    func removeItems() {
+        for child in children{
+            if child.position.y < -self.size.height - 100{
+                child.removeFromParent()
+            }
+            if child.position.y > self.size.height + 150{
+                child.removeFromParent()
+            }
+        }
+    }
+    
+    func showRoadStrips() {
+        
+        enumerateChildNodes(withName: "leftRoadStrip", using: { (roadStrip, stop) in
+            let strip = roadStrip as! SKShapeNode
+            strip.position.y -= 30
+        })
+        enumerateChildNodes(withName: "middleRoadStrip", using: { (roadStrip, stop) in
+            let strip = roadStrip as! SKShapeNode
+            strip.position.y -= 30
+        })
+        enumerateChildNodes(withName: "rightRoadStrip", using: { (roadStrip, stop) in
+            let strip = roadStrip as! SKShapeNode
+            strip.position.y -= 30
+        })
+    }
+    
+    func showEnemyCars() {
+        
+        enumerateChildNodes(withName: "enemyCar", using: { (car, stop) in
+            let currentCar = car as! SKSpriteNode
+            currentCar.position.y -= 10
+        })
     }
     
     func showSyringes() {

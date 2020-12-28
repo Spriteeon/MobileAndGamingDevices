@@ -11,31 +11,31 @@ import SpriteKit
 class MenuScene: SKScene {
     
     override func didMove(to view: SKView) {
-        // addLogo()
+        addLogo()
         addLabels()
     }
     
     func addLogo() {
-        let logo = SKSpriteNode(imageNamed: "logo")
-        logo.size = CGSize(width: frame.size.width/4, height: frame.size.width/4)
+        let logo = SKSpriteNode(imageNamed: "ronaRushLogo")
+        logo.size = CGSize(width: frame.size.width/4 + 200, height: frame.size.width/4 + 200)
         logo.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
         addChild(logo)
     }
     
     func addLabels() {
         
-        let titleLabel = SKLabelNode(text: "Virus Rush")
+        /*let titleLabel = SKLabelNode(text: "Virus Rush")
         titleLabel.fontName = "AvenirNext-Bold"
         titleLabel.fontSize = 70.0
         titleLabel.fontColor = UIColor.white
         titleLabel.position = CGPoint(x: frame.midX, y: frame.midY + 100)
-        addChild(titleLabel)
+        addChild(titleLabel)*/
         
         let playLabel = SKLabelNode(text: "Tap to Play!")
         playLabel.fontName = "AvenirNext-Bold"
         playLabel.fontSize = 50.0
         playLabel.fontColor = UIColor.white
-        playLabel.position = CGPoint(x: frame.midX, y: frame.midY)
+        playLabel.position = CGPoint(x: frame.midX, y: frame.midY - 50)
         addChild(playLabel)
         animate(label: playLabel)
         
