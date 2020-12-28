@@ -12,4 +12,5 @@ enum CollisionTypes: UInt32 {
     case player = 1
     case wall = 2
     case enemy = 4
+    case syringe = 8
 }

@@ -13,6 +13,9 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var player: SKSpriteNode!
+    var syringeNode: SKSpriteNode!
+    var trafficItem: SKSpriteNode!
+    var road: SKSpriteNode!
     
     // Hack stuff for using Sim
     var lastTouchPosition: CGPoint?
@@ -54,6 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         showRoadStrips()
         showEnemyCars()
+        showSyringes()
         removeItems()
         
         move()
@@ -82,10 +86,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createPlayer()
         createWalls()
         addUI()
-        //Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
+        
+        //createBackground()
+        
+        Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
     }
+    
+    /*func createBackground() {
+        road = SKSpriteNode(imageNamed: "RoadBackground")
+        road.size = self.size
+        road.position = CGPoint(x: 0, y: 0)
+        road.zPosition = 0
+        addChild(road)
+    }*/
     
     func addUI() {
         scoreLabel.fontName = "AvenirNext-Bold"
@@ -107,17 +122,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         #if targetEnvironment(simulator)
         if let lastTouchPosition = lastTouchPosition {
             let diff = CGPoint(x: lastTouchPosition.x - player.position.x, y: lastTouchPosition.y - player.position.y)
-            physicsWorld.gravity = CGVector(dx: diff.x / 200, dy: diff.y / 200)
+            player.physicsBody?.velocity = CGVector(dx: diff.x, dy: diff.y)
         }
         #else
         if let accelerometerData = motionManager?.accelerometerData {
-            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.x * 50, dy: accelerometerData.acceleration.y * -50)
+            player.physicsBody?.velocity = CGVector(dx: accelerometerData.acceleration.x * 50, dy: accelerometerData.acceleration.y * -50)
         }
         #endif
     }
     
     func createPlayer() {
-        player = SKSpriteNode(imageNamed: "blueCar")
+        player = SKSpriteNode(imageNamed: "ambulance")
         player.position = CGPoint(x: -70, y: -300)
         player.zPosition = 50
         
@@ -125,6 +140,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         player.physicsBody = SKPhysicsBody(rectangleOf: player.size)
         player.physicsBody?.categoryBitMask = CollisionTypes.player.rawValue
         player.physicsBody?.allowsRotation = false
+        player.physicsBody?.isDynamic = true
         player.physicsBody?.linearDamping = 0.5
         
         player.physicsBody?.contactTestBitMask = CollisionTypes.enemy.rawValue
@@ -248,7 +264,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func leftTraffic() {
-        let trafficItem : SKSpriteNode!
         possibleCars = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: possibleCars) as! [String]
         trafficItem = SKSpriteNode(imageNamed: possibleCars[0])
         trafficItem.name = "enemyCar"
@@ -281,7 +296,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     @objc func rightTraffic() {
-        let trafficItem : SKSpriteNode!
         possibleCars = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: possibleCars) as! [String]
         trafficItem = SKSpriteNode(imageNamed: possibleCars[0])
         trafficItem.name = "enemyCar"
@@ -310,7 +324,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         trafficItem.physicsBody?.contactTestBitMask = CollisionTypes.player.rawValue
         trafficItem.physicsBody?.collisionBitMask = 0
         
-        addChild(trafficItem)
+        self.addChild(trafficItem)
     }
     
     func removeItems() {
@@ -318,7 +332,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if child.position.y < -self.size.height - 100{
                 child.removeFromParent()
             }
+            if child.position.y > self.size.height + 150{
+                child.removeFromParent()
+            }
         }
+    }
+    
+    func fireSyringe() {
+        syringeNode = SKSpriteNode(imageNamed: "syringe")
+        syringeNode.name = "syringe"
+        syringeNode.position = player.position
+        syringeNode.position.y += 80
+        syringeNode.zPosition = 50
+        
+        syringeNode.physicsBody = SKPhysicsBody(rectangleOf: syringeNode.size)
+        syringeNode.physicsBody?.isDynamic = true
+        syringeNode.physicsBody?.allowsRotation = false
+        syringeNode.physicsBody?.usesPreciseCollisionDetection = true
+        
+        syringeNode.physicsBody?.categoryBitMask = CollisionTypes.player.rawValue
+        syringeNode.physicsBody?.contactTestBitMask = CollisionTypes.enemy.rawValue
+        syringeNode.physicsBody?.collisionBitMask = 0
+        
+        self.addChild(syringeNode)
+    }
+    
+    func showSyringes() {
+        
+        enumerateChildNodes(withName: "syringe", using: { (syringe, stop) in
+            let currentSyringe = syringe as! SKSpriteNode
+            currentSyringe.position.y += 20
+        })
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -329,7 +373,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             playerCollided(with: nodeB)
         } else if nodeB == player {
             playerCollided(with: nodeA)
+        } else if nodeA == syringeNode {
+            syringeCollided(with: nodeB, syringe: nodeA)
+        } else if nodeB == syringeNode {
+            syringeCollided(with: nodeA, syringe: nodeB)
         }
+    }
+    
+    func syringeCollided(with enemy: SKNode, syringe: SKNode) {
+        enemy.removeFromParent()
+        syringe.removeFromParent()
     }
     
     func playerCollided(with node: SKNode) {
@@ -356,6 +409,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         lastTouchPosition = location
+        
+        fireSyringe()
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
