@@ -16,7 +16,8 @@
 		AB421939258ED84F00FA3993 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AB421937258ED84F00FA3993 /* LaunchScreen.storyboard */; };
 		AB6092E12599130100D69CDD /* MenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = AB6092E02599130100D69CDD /* MenuScene.sks */; };
 		AB6092E32599188600D69CDD /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6092E22599188600D69CDD /* MenuScene.swift */; };
-		AB6092E725993D2700D69CDD /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = AB6092E625993D2700D69CDD /* Explosion.sks */; };
+		AB6092E9259A139400D69CDD /* RoadBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = AB6092E8259A139400D69CDD /* RoadBackground.png */; };
+		AB6092ED259A154400D69CDD /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = AB6092EC259A154300D69CDD /* Explosion.sks */; };
 		AB90FE69258F9A900087A7F3 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90FE68258F9A900087A7F3 /* Settings.swift */; };
 		ABD1C561259109620048C0C0 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD1C560259109620048C0C0 /* Helper.swift */; };
 /* End PBXBuildFile section */
@@ -33,7 +34,8 @@
 		AB42193A258ED84F00FA3993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AB6092E02599130100D69CDD /* MenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MenuScene.sks; sourceTree = "<group>"; };
 		AB6092E22599188600D69CDD /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
-		AB6092E625993D2700D69CDD /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Explosion.sks; path = ../../../../../Downloads/Explosion.sks; sourceTree = "<group>"; };
+		AB6092E8259A139400D69CDD /* RoadBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = RoadBackground.png; path = ../../../../RoadBackground.png; sourceTree = "<group>"; };
+		AB6092EC259A154300D69CDD /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Explosion.sks; path = ../../../../../Downloads/Explosion.sks; sourceTree = "<group>"; };
 		AB90FE68258F9A900087A7F3 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		ABD1C560259109620048C0C0 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -91,6 +93,7 @@
 			children = (
 				AB42192A258ED84E00FA3993 /* GameScene.sks */,
 				AB42192E258ED84E00FA3993 /* GameScene.swift */,
+				AB6092E8259A139400D69CDD /* RoadBackground.png */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -109,8 +112,8 @@
 			children = (
 				AB421932258ED84E00FA3993 /* Main.storyboard */,
 				AB421935258ED84F00FA3993 /* Assets.xcassets */,
-				AB6092E625993D2700D69CDD /* Explosion.sks */,
 				AB421937258ED84F00FA3993 /* LaunchScreen.storyboard */,
+				AB6092EC259A154300D69CDD /* Explosion.sks */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -196,7 +199,8 @@
 				AB421936258ED84F00FA3993 /* Assets.xcassets in Resources */,
 				AB6092E12599130100D69CDD /* MenuScene.sks in Resources */,
 				AB421939258ED84F00FA3993 /* LaunchScreen.storyboard in Resources */,
-				AB6092E725993D2700D69CDD /* Explosion.sks in Resources */,
+				AB6092ED259A154400D69CDD /* Explosion.sks in Resources */,
+				AB6092E9259A139400D69CDD /* RoadBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

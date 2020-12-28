@@ -82,7 +82,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         createPlayer()
         createWalls()
         addUI()
-        Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
+        //Timer.scheduledTimer(timeInterval: TimeInterval(0.2), target: self, selector: #selector (GameScene.createRoadStrips), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.leftTraffic), userInfo: nil, repeats: true)
         Timer.scheduledTimer(timeInterval: TimeInterval(Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 3)), target: self, selector: #selector (GameScene.rightTraffic), userInfo: nil, repeats: true)
     }
