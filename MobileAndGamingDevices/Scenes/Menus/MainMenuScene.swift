@@ -15,8 +15,10 @@ class MainMenuScene: SKScene {
         addLabels()
     }
     
+    // Logo for Main Menu
     func addLogo() {
         let logo = SKSpriteNode(imageNamed: "ronaRushLogo")
+        // Size set depending on Screen Size
         logo.size = CGSize(width: frame.size.width/4 + 200, height: frame.size.width/4 + 200)
         logo.position = CGPoint(x: frame.midX, y: frame.midY + frame.size.height/4)
         addChild(logo)
@@ -24,13 +26,7 @@ class MainMenuScene: SKScene {
     
     func addLabels() {
         
-        /*let titleLabel = SKLabelNode(text: "Virus Rush")
-        titleLabel.fontName = "AvenirNext-Bold"
-        titleLabel.fontSize = 70.0
-        titleLabel.fontColor = UIColor.white
-        titleLabel.position = CGPoint(x: frame.midX, y: frame.midY + 100)
-        addChild(titleLabel)*/
-        
+        // Animated Tap to Play Label
         let playLabel = SKLabelNode(text: "Tap to Play!")
         playLabel.fontName = "AvenirNext-Bold"
         playLabel.fontSize = 50.0
@@ -39,6 +35,7 @@ class MainMenuScene: SKScene {
         addChild(playLabel)
         animate(label: playLabel)
         
+        // Highscore Label updated from the Highscore
         let highscoreLabel = SKLabelNode(text: "Highscore: " + "\(UserDefaults.standard.integer(forKey: "Highscore"))")
         highscoreLabel.fontName = "AvenirNext-Bold"
         highscoreLabel.fontSize = 40.0
@@ -46,6 +43,7 @@ class MainMenuScene: SKScene {
         highscoreLabel.position = CGPoint(x: frame.midX, y: frame.midY - highscoreLabel.frame.size.height*4)
         addChild(highscoreLabel)
         
+        // Recent Score Label updated from the Recent Score
         let recentScoreLabel = SKLabelNode(text: "Recent Score: " + "\(UserDefaults.standard.integer(forKey: "RecentScore"))")
         recentScoreLabel.fontName = "AvenirNext-Bold"
         recentScoreLabel.fontSize = 40.0
@@ -54,9 +52,8 @@ class MainMenuScene: SKScene {
         addChild(recentScoreLabel)
     }
     
+    // Animation function for Tap to Play Label
     func animate(label: SKLabelNode) {
-        //let fadeOut = SKAction.fadeOut(withDuration: 0.5)
-        //let fadeIn = SKAction.fadeIn(withDuration: 0.5)
         
         let scaleUp = SKAction.scale(to: 1.1, duration: 0.5)
         let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
@@ -65,6 +62,7 @@ class MainMenuScene: SKScene {
         label.run(SKAction.repeatForever(sequence))
     }
     
+    // If Screen is touched then Game Scene will open
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         let transition = SKTransition.flipHorizontal(withDuration: 0.5)
         let gameScene = GameScene(size: view!.bounds.size)

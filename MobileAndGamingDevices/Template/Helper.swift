@@ -11,6 +11,7 @@ import UIKit
 
 class Helper : NSObject {
     
+    // Function to get a random float between two numbers, used for Traffic Spawning
     func randomBetweenTwoNumbers(firstNumber : CGFloat, secondNumber : CGFloat) -> CGFloat {
         return CGFloat(arc4random())/CGFloat(UINT32_MAX) * abs(firstNumber - secondNumber) + min(firstNumber, secondNumber)
     }

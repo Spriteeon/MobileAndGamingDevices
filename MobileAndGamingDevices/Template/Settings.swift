@@ -8,6 +8,7 @@
 
 import SpriteKit
 
+// Collision Types for Collisions in Game Scene
 enum CollisionTypes: UInt32 {
     case player = 1
     case wall = 2

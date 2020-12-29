@@ -15,6 +15,7 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Menu Scene is loaded when Game is Loaded
         if let view = self.view as! SKView?, let scene = MainMenuScene(fileNamed: "MainMenuScene") {
             
             scene.scaleMode = .aspectFill

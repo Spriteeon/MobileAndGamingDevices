@@ -405,14 +405,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         syringeNode.physicsBody = SKPhysicsBody(rectangleOf: syringeNode.size)
         syringeNode.physicsBody?.isDynamic = true
         syringeNode.physicsBody?.allowsRotation = false
-        //syringeNode.physicsBody?.usesPreciseCollisionDetection = true
         
         syringeNode.physicsBody?.categoryBitMask = CollisionTypes.player.rawValue
         syringeNode.physicsBody?.contactTestBitMask = CollisionTypes.enemy.rawValue
         syringeNode.physicsBody?.collisionBitMask = 0
         
         self.addChild(syringeNode)
-        // canFire = false
         count = 0
     }
     
