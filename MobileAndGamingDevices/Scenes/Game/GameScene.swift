@@ -268,7 +268,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         treeItem.name = "tree"
 
         treeItem.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        treeItem.zPosition = 50
+        treeItem.zPosition = 100
         
         let randomSide = Helper().randomBetweenTwoNumbers(firstNumber: 1, secondNumber: 8)
         switch randomSide {
