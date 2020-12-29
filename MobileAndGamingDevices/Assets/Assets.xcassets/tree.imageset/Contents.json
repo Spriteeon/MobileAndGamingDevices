@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "car_red_1-1.png",
+      "filename" : "tree.png",
       "scale" : "1x"
     },
     {
@@ -15,7 +15,7 @@
     },
     {
       "idiom" : "ipad",
-      "filename" : "car_red_1.png",
+      "filename" : "tree-1.png",
       "scale" : "1x"
     },
     {

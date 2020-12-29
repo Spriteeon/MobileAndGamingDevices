@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "RonaRushLogo.png",
+      "filename" : "greenCar.png",
       "scale" : "1x"
     },
     {
@@ -15,7 +15,7 @@
     },
     {
       "idiom" : "ipad",
-      "filename" : "RonaRushLogo-1.png",
+      "filename" : "greenCar-1.png",
       "scale" : "1x"
     },
     {
