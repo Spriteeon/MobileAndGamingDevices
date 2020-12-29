@@ -36,6 +36,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var roadStripWidth: CGFloat!
     var roadStripHeight: CGFloat!
     
+    var syringeWidth: CGFloat!
+    var syringeHeight: CGFloat!
+    
+    var canFire: Bool!
+    var count: Int!
+    
     let scoreLabel = SKLabelNode(text: "0")
     var score = 0 {
         didSet {
@@ -44,7 +50,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     let livesLabel = SKLabelNode(text: "5")
-    var lives = 5 {
+    var lives = 3 {
         didSet {
             livesLabel.text = "\(lives)"
         }
@@ -63,6 +69,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         
         guard isGameOver == false else { return }
+        
+        count += 1
+        if count > 30 {
+            canFire = true
+        } else {
+            canFire = false
+        }
         
         showRoadStrips()
         showEnemyCars()
@@ -94,8 +107,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createGame() {
         
+        canFire = true
+        count = 0
+        
         carWidth = self.frame.width / 10
         carHeight = self.frame.height / 10
+        
+        syringeWidth = carWidth / 4
+        syringeHeight = carHeight / 2
         
         roadStripWidth = self.frame.width / 70
         roadStripHeight = self.frame.height / 30
@@ -372,8 +391,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func fireSyringe() {
+        
+        guard canFire == true else { return }
+        
         syringeNode = SKSpriteNode(imageNamed: "syringe")
         syringeNode.name = "syringe"
+        syringeNode.size.width = syringeWidth
+        syringeNode.size.height = syringeHeight
         syringeNode.position = player.position
         syringeNode.position.y += 100
         syringeNode.zPosition = 50
@@ -388,6 +412,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         syringeNode.physicsBody?.collisionBitMask = 0
         
         self.addChild(syringeNode)
+        // canFire = false
+        count = 0
     }
     
     func removeItems() {
@@ -456,6 +482,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func syringeCollided(with enemy: SKNode, syringe: SKNode) {
+        
+        score += 50
+        
         enemy.removeFromParent()
         syringe.removeFromParent()
     }
